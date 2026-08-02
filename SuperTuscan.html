@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5대 슈퍼투스칸 — Super Tuscan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#241119;
+    --night-2:#2f1620;
+    --paper:#ece0c6;
+    --paper-dim:#d8c9a8;
+    --sangiovese:#8c2f39;
+    --sangiovese-bright:#b23e4a;
+    --gold:#c6a15b;
+    --gold-dim:#8a733f;
+    --olive:#6b7a4f;
+    --ink:#f3ead4;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--night);
+    color:var(--ink);
+    font-family:'Noto Serif KR', serif;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{color:inherit;}
+
+  ::selection{background:var(--sangiovese); color:var(--ink);}
+
+  .latin{ font-family:'Cormorant Garamond', serif; }
+  .label{ font-family:'EB Garamond', serif; letter-spacing:.22em; text-transform:uppercase; }
+
+  /* ---------- background texture ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:8vh 6vw;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(140,47,57,.28), transparent 60%),
+      linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
+  }
+
+  .hero-vine{
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:1px; height:100%;
+    background:linear-gradient(180deg, transparent, var(--gold-dim) 15%, var(--gold-dim) 85%, transparent);
+    opacity:.5;
+  }
+
+  .eyebrow{
+    color:var(--gold);
+    font-size:.78rem;
+    margin-bottom:2.2rem;
+  }
+
+  .eyebrow::before, .eyebrow::after{
+    content:"";
+    display:inline-block;
+    width:34px; height:1px;
+    background:var(--gold-dim);
+    vertical-align:middle;
+    margin:0 14px 4px;
+  }
+
+  h1{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-size:clamp(2.6rem, 8vw, 5.6rem);
+    line-height:1.05;
+    color:var(--paper);
+  }
+
+  h1 em{
+    display:block;
+    font-style:italic;
+    font-weight:400;
+    color:var(--sangiovese-bright);
+    font-size:clamp(1.6rem, 5vw, 3rem);
+    margin-top:.4rem;
+    letter-spacing:.03em;
+  }
+
+  .hero-sub{
+    max-width:560px;
+    margin-top:2.4rem;
+    color:var(--paper-dim);
+    font-size:1.02rem;
+    line-height:1.95;
+  }
+
+  .hero-estates{
+    margin-top:3.4rem;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:.5rem 1.6rem;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--gold-dim);
+    font-size:1.05rem;
+  }
+  .hero-estates span:not(:last-child)::after{
+    content:"·";
+    margin-left:1.6rem;
+    color:var(--sangiovese);
+    font-style:normal;
+  }
+
+  .scroll-cue{
+    position:absolute; bottom:5vh; left:50%; transform:translateX(-50%);
+    width:1px; height:52px;
+    background:linear-gradient(180deg, transparent, var(--gold-dim));
+  }
+  .scroll-cue::after{
+    content:"";
+    position:absolute; left:-2.5px; top:0;
+    width:6px; height:6px; border-radius:50%;
+    background:var(--gold);
+    animation:drip 2.4s ease-in-out infinite;
+  }
+  @keyframes drip{
+    0%{ transform:translateY(0); opacity:1; }
+    80%{ transform:translateY(46px); opacity:0; }
+    100%{ transform:translateY(46px); opacity:0; }
+  }
+
+  /* ---------- intro band ---------- */
+  .intro{
+    max-width:720px;
+    margin:0 auto;
+    padding:11vh 6vw 8vh;
+    text-align:center;
+  }
+  .intro p{
+    color:var(--paper-dim);
+    font-size:1.06rem;
+  }
+  .intro p + p{ margin-top:1.3rem; }
+  .intro strong{ color:var(--paper); font-weight:600; }
+
+  /* ---------- timeline ---------- */
+  .timeline{
+    position:relative;
+    max-width:1040px;
+    margin:0 auto;
+    padding:2vh 6vw 14vh;
+  }
+
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:calc(6vw + 27px);
+    top:0; bottom:0;
+    width:1px;
+    background:linear-gradient(180deg, transparent, var(--gold-dim) 4%, var(--gold-dim) 96%, transparent);
+  }
+
+  @media (max-width:720px){
+    .timeline::before{ left:33px; }
+  }
+
+  .wine{
+    position:relative;
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:0 2.6rem;
+    padding:5.5vh 0;
+    border-bottom:1px solid rgba(198,161,91,.16);
+  }
+  .wine:last-child{ border-bottom:none; }
+
+  .wine-year{
+    grid-column:1;
+    position:relative;
+  }
+  .wine-year .dot{
+    position:absolute; top:.5rem; left:22px;
+    width:11px; height:11px; border-radius:50%;
+    background:var(--night);
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 5px var(--night);
+  }
+  .wine-year .yr{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:.95rem;
+    color:var(--gold-dim);
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    letter-spacing:.08em;
+  }
+
+  @media (max-width:720px){
+    .wine{ grid-template-columns:44px 1fr; }
+    .wine-year .dot{ left:18px; }
+    .wine-year .yr{ display:none; }
+  }
+
+  .wine-body{ grid-column:2; }
+
+  .wine-head{
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:.9rem 1.2rem;
+    margin-bottom:.6rem;
+  }
+
+  .wine-name{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(1.9rem, 4vw, 2.7rem);
+    color:var(--paper);
+  }
+
+  .wine-estate{
+    font-family:'EB Garamond', serif;
+    font-size:.86rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--sangiovese-bright);
+  }
+
+  .wine-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem 1.6rem;
+    margin:1.1rem 0 1.3rem;
+    font-family:'EB Garamond', serif;
+    font-size:.86rem;
+    color:var(--paper-dim);
+  }
+  .wine-meta b{
+    color:var(--gold);
+    font-weight:500;
+    margin-right:.4em;
+    letter-spacing:.05em;
+  }
+
+  .wine-note{
+    color:var(--paper-dim);
+    font-size:1rem;
+    max-width:640px;
+  }
+
+  .wine-quote{
+    margin-top:1.2rem;
+    padding-left:1.1rem;
+    border-left:2px solid var(--sangiovese);
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--gold);
+    font-size:1.08rem;
+    max-width:560px;
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding:9vh 6vw 7vh;
+    text-align:center;
+    background:var(--night-2);
+    border-top:1px solid rgba(198,161,91,.16);
+  }
+  footer .mark{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.5rem;
+    color:var(--gold);
+    margin-bottom:1rem;
+  }
+  footer p{
+    max-width:560px;
+    margin:0 auto;
+    color:var(--paper-dim);
+    font-size:.92rem;
+  }
+  footer .fine{
+    margin-top:2.2rem;
+    color:var(--gold-dim);
+    font-family:'EB Garamond', serif;
+    font-size:.76rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .scroll-cue::after{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<section class="hero">
+  <div class="hero-vine"></div>
+  <p class="eyebrow label">Tuscany, Italy</p>
+  <h1>5대 슈퍼투스칸<em>Super Tuscan</em></h1>
+  <p class="hero-sub">
+    1968년, 보르도 품종을 심은 한 병의 반란으로 시작된 이야기.
+    이탈리아 와인법의 바깥에서 태어나, 결국 세계 와인 지도를 다시 그린
+    다섯 개의 병을 소개합니다.
+  </p>
+  <div class="hero-estates">
+    <span>Sassicaia</span>
+    <span>Tignanello</span>
+    <span>Solaia</span>
+    <span>Ornellaia</span>
+    <span>Masseto</span>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<section class="intro">
+  <p>
+    1960년대 이전까지 이탈리아 와인법은 토착 품종과 전통 양조 방식을
+    엄격하게 규정했습니다. 토스카나의 몇몇 생산자들은 이 틀을 벗어나
+    <strong>카베르네 소비뇽, 메를로, 카베르네 프랑</strong> 같은 국제 품종을
+    산지오베제와 나란히, 혹은 그것을 완전히 대체해 심기 시작했죠.
+  </p>
+  <p>
+    법적으로는 최하위 등급인 <strong>‘테이블 와인(Vino da Tavola)’</strong>
+    으로 분류될 수밖에 없었지만, 품질은 그 어떤 등급도 설명할 수 없었습니다.
+    평론가와 시장은 이 반항적인 와인들에 <strong>‘슈퍼 투스칸’</strong>이라는
+    이름을 붙였고, 이는 곧 하나의 카테고리가 되었습니다.
+  </p>
+</section>
+
+<section class="timeline">
+
+  <article class="wine">
+    <div class="wine-year">
+      <div class="dot"></div>
+      <span class="yr latin">1968</span>
+    </div>
+    <div class="wine-body">
+      <div class="wine-head">
+        <h2 class="wine-name">Sassicaia</h2>
+        <span class="wine-estate">Tenuta San Guido</span>
+      </div>
+      <div class="wine-meta">
+        <span><b>지역</b>볼게리</span>
+        <span><b>품종</b>카베르네 소비뇽 85% · 카베르네 프랑 15%</span>
+        <span><b>첫 빈티지</b>1968</span>
+      </div>
+      <p class="wine-note">
+        슈퍼 투스칸이라는 개념 자체를 만든 원조. 마리오 인치사 델라 로케타
+        후작이 보르도의 자갈밭을 닮은 볼게리의 토양을 발견하고 심은
+        카베르네 소비뇽에서 출발했습니다. 1994년, 이탈리아 정부는 결국
+        단 하나의 와인만을 위한 원산지 등급 <em class="latin">DOC Bolgheri
+        Sassicaia</em>를 신설했습니다 — 세계에서 유일하게 한 생산자만을
+        위한 아펠라시옹입니다.
+      </p>
+      <p class="wine-quote">“규정집 밖에서, 규정집을 새로 쓴 와인.”</p>
+    </div>
+  </article>
+
+  <article class="wine">
+    <div class="wine-year">
+      <div class="dot"></div>
+      <span class="yr latin">1971</span>
+    </div>
+    <div class="wine-body">
+      <div class="wine-head">
+        <h2 class="wine-name">Tignanello</h2>
+        <span class="wine-estate">Marchesi Antinori</span>
+      </div>
+      <div class="wine-meta">
+        <span><b>지역</b>키안티 클라시코</span>
+        <span><b>품종</b>산지오베제 80% · 카베르네 소비뇽·프랑 20%</span>
+        <span><b>첫 빈티지</b>1971</span>
+      </div>
+      <p class="wine-note">
+        피에로 안티노리가 자신의 최고 산지오베제 밭에서 전통적으로 섞어온
+        백포도를 과감히 빼고, 프렌치 바리크 숙성을 이탈리아에 처음 도입한
+        와인. 토스카나의 상징 품종인 산지오베제를 국제 품종과 나란히
+        세워, ‘투스칸다움’을 지키면서도 새로운 스타일을 증명했습니다.
+      </p>
+      <p class="wine-quote">“전통 품종으로 쓴 첫 반란의 문장.”</p>
+    </div>
+  </article>
+
+  <article class="wine">
+    <div class="wine-year">
+      <div class="dot"></div>
+      <span class="yr latin">1978</span>
+    </div>
+    <div class="wine-body">
+      <div class="wine-head">
+        <h2 class="wine-name">Solaia</h2>
+        <span class="wine-estate">Marchesi Antinori</span>
+      </div>
+      <div class="wine-meta">
+        <span><b>지역</b>키안티 클라시코</span>
+        <span><b>품종</b>카베르네 소비뇽 75% · 산지오베제 20% · 카베르네 프랑 5%</span>
+        <span><b>첫 빈티지</b>1978</span>
+      </div>
+      <p class="wine-note">
+        티냐넬로 밭 바로 옆, 해가 가장 잘 드는 남서향 구획 ‘솔라이아
+        (햇빛이 드는 땅)’에서 태어난 와인. 티냐넬로가 산지오베제 중심이라면
+        솔라이아는 카베르네 소비뇽이 무게중심을 잡는, 안티노리가 만든
+        또 하나의 정반대 답안입니다.
+      </p>
+      <p class="wine-quote">“같은 언덕, 다른 결론.”</p>
+    </div>
+  </article>
+
+  <article class="wine">
+    <div class="wine-year">
+      <div class="dot"></div>
+      <span class="yr latin">1985</span>
+    </div>
+    <div class="wine-body">
+      <div class="wine-head">
+        <h2 class="wine-name">Ornellaia</h2>
+        <span class="wine-estate">Tenuta dell’Ornellaia</span>
+      </div>
+      <div class="wine-meta">
+        <span><b>지역</b>볼게리</span>
+        <span><b>품종</b>카베르네 소비뇽 중심 보르도 블렌드</span>
+        <span><b>첫 빈티지</b>1985</span>
+      </div>
+      <p class="wine-note">
+        사시카이아를 만든 인치사 델라 로케타 후작의 조카, 로도비코
+        안티노리가 볼게리에 세운 또 하나의 명가. 우아함과 힘을 동시에
+        지닌 보르도 스타일 블렌드로, 매 빈티지마다 아티스트와 협업한
+        한정판 라벨을 선보이는 것으로도 유명합니다.
+      </p>
+      <p class="wine-quote">“볼게리에 새겨진 두 번째 서명.”</p>
+    </div>
+  </article>
+
+  <article class="wine">
+    <div class="wine-year">
+      <div class="dot"></div>
+      <span class="yr latin">1986</span>
+    </div>
+    <div class="wine-body">
+      <div class="wine-head">
+        <h2 class="wine-name">Masseto</h2>
+        <span class="wine-estate">Tenuta dell’Ornellaia</span>
+      </div>
+      <div class="wine-meta">
+        <span><b>지역</b>볼게리</span>
+        <span><b>품종</b>메를로 100%</span>
+        <span><b>첫 빈티지</b>1986</span>
+      </div>
+      <p class="wine-note">
+        오르넬라이아의 한 구획, 청회색 점토질 토양 ‘마세토’에서 우연히
+        발견된 메를로 밭이 너무나 특별해 독립된 와인이 되었습니다.
+        보르도 밖에서 만들어진 메를로 중 세계 최고로 꼽히는, 다섯 병 중
+        가장 과감하고 단일한 답.
+      </p>
+      <p class="wine-quote">“한 구획이 증명한, 품종 하나의 완성.”</p>
+    </div>
+  </article>
+
+</section>
+
+<footer>
+  <p class="mark">Super Tuscan</p>
+  <p>
+    다섯 병 모두 오늘날 이탈리아 최고 등급인 <strong>IGT Toscana</strong>
+    혹은 자신만의 <strong>DOC</strong>로 자리를 옮겼지만, 시작은 언제나
+    규정 밖에서였습니다. 슈퍼 투스칸은 결국 등급이 아니라, 태도의 이름입니다.
+  </p>
+  <p class="fine">Curated overview · For educational purposes</p>
+</footer>
+
+</body>
+</html>
