@@ -33,4 +33,21 @@ document.addEventListener('change',e=>{if(!e.target.dataset.reference)return;con
 let pendingReference=null;document.addEventListener('click',e=>{const b=e.target.closest('[data-reference-add]');if(!b)return;const ref=references.find(r=>r.id===b.dataset.referenceAdd);if(!ref)return;openForm('candidate',{name:ref.name,vintage:ref.vintage,volume:ref.volume||750,price:'',grape:'',country:'',shop:''});pendingReference=ref.id;toast('실제로 제안받은 가격과 품종을 입력해주세요. 참고 가격은 별도로 연결됩니다.')});
 const originalOpenForm=openForm;openForm=function(kind,c){pendingReference=null;originalOpenForm(kind,c)};
 const originalSubmit=$('#form').onsubmit;$('#form').onsubmit=async e=>{const referenceId=pendingReference;await originalSubmit(e);if(referenceId&&!$('#modal').open&&mode==='candidate'&&candidates[0]){candidates[0].referenceId=referenceId;save();renderBuy();pendingReference=null}};
+function updateOnlinePrices() {
+  const wine = $('#priceSearch').value.trim();
+  const wassap = new URL('https://wassap.co/');
+  if (wine) wassap.searchParams.set('searchWord', wine);
+  $('#wassapPrices').href = wassap;
+  const stores = new URL('https://www.google.com/search');
+  stores.searchParams.set('q', [wine, '와인 성지 가격'].filter(Boolean).join(' '));
+  $('#storePrices').href = stores;
+}
+
+$('#priceSearch').addEventListener('input', updateOnlinePrices);
+const linkedWine = new URLSearchParams(location.search).get('price');
+if (linkedWine?.trim()) {
+  $('#priceSearch').value = linkedWine.trim().slice(0, 150);
+  tab('buy');
+}
+updateOnlinePrices();
 render();
